@@ -293,4 +293,26 @@ open class Widget: GObjectRepresentable {
             gtk_widget_set_size_request(castedPointer(), Int32(newValue.width), Int32(newValue.height))
         }
     }
+
+    // MARK: - Constraints
+
+    /// ConstrainLayout that gets created when it is accessed
+    private lazy var constraintLayout: ConstraintLayout = {
+        let newLayout = ConstraintLayout()
+        gtk_widget_set_layout_manager(widgetPointer, newLayout.pointer)
+        return newLayout
+    }()
+
+    public func setConstraint(
+        for attribute: ConstraintAttribute,
+        _ relation: ConstraintRelation,
+        constant: Double,
+        strength: UInt32 = GTK_CONSTRAINT_STRENGTH_STRONG.rawValue
+    ) {
+        constraintLayout.setConstraint(for: attribute, relation, constant: constant, strength: strength)
+    }
+
+    public func removeConstraint(for attribute: ConstraintAttribute, _ relation: ConstraintRelation) {
+        constraintLayout.removeConstraint(for: attribute, relation)
+    }
 }

@@ -2,7 +2,7 @@ import CGtk
 
 /// Helper Box that uses GtkBox under the hood but only allows one child. It returns its parents orientation.
 open class SingleChildBox: Widget, Orientable {
-    var child: Widget?
+    public private(set) var child: Widget?
 
     public override init() {
         super.init()
