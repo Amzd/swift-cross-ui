@@ -25,6 +25,9 @@ class SplitAppState: Observable {
     @Observed var selectedArea: SubjectArea?
     @Observed var selectedDetail: Any?
     @Observed var columns: Columns = .two
+    @Observed var spacing: Int = 10
+    @Observed var minWidth: Int = 10
+    @Observed var showA = true
 }
 
 @main
@@ -34,17 +37,63 @@ struct SplitApp: App {
     let state = SplitAppState()
 
     let windowProperties = WindowProperties(
-        title: "Split",
+        title: "Test",
         defaultSize: WindowProperties.Size(600, 250)
     )
 
     var body: some ViewContent {
-        switch state.columns {
-            case .two:
-                doubleColumn
-            case .three:
-                tripleColumn
+        VStack {
+            HStack {
+                Text("Spacing:")
+                Slider(state.$spacing, minimum: 0, maximum: 60)
+                Text("Min width:")
+                Slider(state.$minWidth, minimum: 0, maximum: 1000)
+                Button("toggle", action: { state.showA.toggle() })
+            }
+            if state.showA {
+                let _ = print("showA")
+                Text("Ha").foregroundColor(.green)
+            }
+            NavigationLink("link", value: "br", path: Binding<NavigationPath>(get: { NavigationPath() }, set: { _ in }))
+                .frame(minWidth: state.minWidth)
+                .frame(minWidth: state.minWidth)
+            HStack(spacing: state.spacing) {
+                switch "test" {
+                case "test":
+                    Text("Some text here")
+                    Button("Button") { }
+                    Spacer()
+                    if true {
+                        Text("< spacer")
+                        if true {
+                            ForEach(["1", "2", "3"]) {
+                                Text($0)
+                                if true {
+                                    Text("-")
+                                }
+                            }
+                            Text("4")
+                        }
+                    }
+                default:
+                    Text("not shown")
+                }
+                Text("bottom level")
+            }
+
+            HStack {
+                Text("A")
+                Spacer()
+                Text("B")
+            }
+
+            VStack {
+                Text("A")
+                Spacer()
+                Text("B")
+            }
         }
+        .padding(20)
     }
 
     /// Example view for a two column NavigationSplitView
@@ -87,12 +136,10 @@ struct SplitApp: App {
                 switch state.selectedArea {
                     case .science:
                         Text("Choose a science subject")
-                            .padding(.bottom, 10)
                         Button("Physics") { state.selectedDetail = ScienceSubject.physics }
                         Button("Chemistry") { state.selectedDetail = ScienceSubject.chemistry }
                     case .humanities:
                         Text("Choose a humanities subject")
-                            .padding(.bottom, 10)
                         Button("English") { state.selectedDetail = HumanitiesSubject.english }
                         Button("History") { state.selectedDetail = HumanitiesSubject.history }
                     case nil:

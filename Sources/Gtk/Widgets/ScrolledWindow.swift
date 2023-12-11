@@ -6,6 +6,7 @@ public class ScrolledWindow: Widget {
     public override init() {
         super.init()
         widgetPointer = gtk_scrolled_window_new()
+        propagateNaturalWidth = true
     }
 
     override func didMoveToParent() {
